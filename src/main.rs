@@ -22,32 +22,40 @@ fn dist_test2(nodes: &Vec<player::Player>, edges: &Vec<Vec<usize>>) {
 
 fn main() {
     println!("Please wait...");
+    // Reading the file
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
         eprintln!("Usage: {} <path/to/your/file.csv>", args[0]);
         std::process::exit(1);
     }
     let _file_path = &args[1];
+    // Computing the nodes and neighbors
     let nodes = bfs::read_csv_file(_file_path);
     let neighbors = bfs::edges(nodes.clone(), nodes.len());
+    // Running tests
     dist_test(&nodes, &neighbors);
     dist_test2(&nodes, &neighbors);
+    // Retrieving first player - Loop in case player is not found
     loop {
         println!("Enter a player name:");
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Failed to read line");
         let input_name = input.trim();
+        // Checking if player input is correct
         match player::find_player(&nodes, input_name) {
             Some(starting_player) => {
                 println!("Player found, {:?}", starting_player);
+                    // Retrieving second player
                     loop {
                         println!("What player distance would you like to see? Enter a player name:");
                         let mut input = String::new();
                         io::stdin().read_line(&mut input).expect("Failed to read line");
                         let input_name = input.trim();
+                        // Checking if player input is correct
                         match player::find_player(&nodes, input_name) {
                             Some(player) => {
                                 println!("Player found, {:?}", player); {
+                                    // Running bfs algorithm for the two players
                                     if let Some(path) = bfs::bfs_with_path(&nodes, &neighbors, starting_player.name.as_str(), player.name.as_str()) {
                                         println!("The path between {:?} and {:?} is {:?}", starting_player.name, player.name, path);
                                         break;
@@ -57,14 +65,12 @@ fn main() {
                                     }
                                 }
                             }
-                            None => {
-                                println!("Player not found. Please try again.");
-                            }
+                            None => println!("Player not found. Please try again."),
                         }
                     }
                     break;
                 }
-            None => todo!(),
+            None => println!("Player not found. Please try again."),
             }
         }
     }
