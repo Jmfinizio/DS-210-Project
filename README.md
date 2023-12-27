@@ -1,5 +1,5 @@
 # DS-210-Project
-Calculating the path between two soccer players.
+Calculating the path between two soccer players with a breadth first search algorithm.
 
 **DS210 Project: The Examination of Links Between Soccer Players**
 Johnathan Finizio
